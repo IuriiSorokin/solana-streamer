@@ -60,6 +60,7 @@ pub enum DexEvent {
     RaydiumClmmAmmConfigAccountEvent(RaydiumClmmAmmConfigAccountEvent),
     RaydiumClmmPoolStateAccountEvent(RaydiumClmmPoolStateAccountEvent),
     RaydiumClmmTickArrayStateAccountEvent(RaydiumClmmTickArrayStateAccountEvent),
+    RaydiumClmmTickArrayBitmapExtensionAccountEvent(RaydiumClmmTickArrayBitmapExtensionAccountEvent),
 
     // Raydium CPMM events
     RaydiumCpmmSwapEvent(RaydiumCpmmSwapEvent),
@@ -115,6 +116,7 @@ impl DexEvent {
             DexEvent::RaydiumClmmAmmConfigAccountEvent(e) => &e.metadata,
             DexEvent::RaydiumClmmPoolStateAccountEvent(e) => &e.metadata,
             DexEvent::RaydiumClmmTickArrayStateAccountEvent(e) => &e.metadata,
+            DexEvent::RaydiumClmmTickArrayBitmapExtensionAccountEvent(e) => &e.metadata,
             DexEvent::RaydiumCpmmSwapEvent(e) => &e.metadata,
             DexEvent::RaydiumCpmmDepositEvent(e) => &e.metadata,
             DexEvent::RaydiumCpmmWithdrawEvent(e) => &e.metadata,
@@ -166,6 +168,7 @@ impl DexEvent {
             DexEvent::RaydiumClmmAmmConfigAccountEvent(e) => &mut e.metadata,
             DexEvent::RaydiumClmmPoolStateAccountEvent(e) => &mut e.metadata,
             DexEvent::RaydiumClmmTickArrayStateAccountEvent(e) => &mut e.metadata,
+            DexEvent::RaydiumClmmTickArrayBitmapExtensionAccountEvent(e) => &mut e.metadata,
             DexEvent::RaydiumCpmmSwapEvent(e) => &mut e.metadata,
             DexEvent::RaydiumCpmmDepositEvent(e) => &mut e.metadata,
             DexEvent::RaydiumCpmmWithdrawEvent(e) => &mut e.metadata,

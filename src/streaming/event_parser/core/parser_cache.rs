@@ -530,6 +530,13 @@ pub fn get_account_configs(
                 account_discriminator: crate::streaming::event_parser::protocols::raydium_clmm::discriminators::TICK_ARRAY_STATE,
                 account_parser: crate::streaming::event_parser::protocols::raydium_clmm::types::tick_array_state_parser,
             },
+            AccountEventParseConfig {
+                program_id: RAYDIUM_CLMM_PROGRAM_ID,
+                protocol_type: ProtocolType::RaydiumClmm,
+                event_type: EventType::AccountRaydiumClmmTickArrayBitmapExtension,
+                account_discriminator: crate::streaming::event_parser::protocols::raydium_clmm::discriminators::TICK_ARRAY_BITMAP_EXTENSION,
+                account_parser: crate::streaming::event_parser::protocols::raydium_clmm::types::tick_array_bitmap_extension_parser,
+            },
         ]);
 
         // Raydium AMM V4 协议

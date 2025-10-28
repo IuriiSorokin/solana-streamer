@@ -7,7 +7,7 @@ use crate::streaming::{
         common::EventMetadata,
         protocols::raydium_clmm::{
             RaydiumClmmAmmConfigAccountEvent, RaydiumClmmPoolStateAccountEvent,
-            RaydiumClmmTickArrayStateAccountEvent,
+            RaydiumClmmTickArrayStateAccountEvent, RaydiumClmmTickArrayBitmapExtensionAccountEvent,
         },
         DexEvent,
     },
@@ -219,6 +219,60 @@ pub fn tick_array_state_parser(
                 owner: account.owner,
                 rent_epoch: account.rent_epoch,
                 tick_array_state: tick_array_state,
+            },
+        ))
+    } else {
+        None
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, BorshDeserialize)]
+pub struct TickArrayBitmapExtension {
+    pub pool_id: Pubkey,
+    #[serde(with = "serde_big_array::BigArray")]
+    pub positive_tick_array_bitmap: [[u64; 8]; 14],
+    #[serde(with = "serde_big_array::BigArray")]
+    pub negative_tick_array_bitmap: [[u64; 8]; 14],
+}
+
+impl Default for TickArrayBitmapExtension {
+    fn default() -> Self {
+        Self {
+            pool_id: Pubkey::default(),
+            positive_tick_array_bitmap: [[0u64; 8]; 14],
+            negative_tick_array_bitmap: [[0u64; 8]; 14],
+        }
+    }
+}
+
+pub const TICK_ARRAY_BITMAP_EXTENSION_SIZE: usize = 1824;
+
+pub fn tick_array_bitmap_extension_decode(data: &[u8]) -> Option<TickArrayBitmapExtension> {
+    if data.len() < TICK_ARRAY_BITMAP_EXTENSION_SIZE {
+        return None;
+    }
+    borsh::from_slice::<TickArrayBitmapExtension>(&data[..TICK_ARRAY_BITMAP_EXTENSION_SIZE]).ok()
+}
+
+pub fn tick_array_bitmap_extension_parser(
+    account: &AccountPretty,
+    metadata: EventMetadata,
+) -> Option<DexEvent> {
+    if account.data.len() < TICK_ARRAY_BITMAP_EXTENSION_SIZE + 8 {
+        return None;
+    }
+    if let Some(tick_array_bitmap_extension) =
+        tick_array_bitmap_extension_decode(&account.data[8..TICK_ARRAY_BITMAP_EXTENSION_SIZE + 8])
+    {
+        Some(DexEvent::RaydiumClmmTickArrayBitmapExtensionAccountEvent(
+            RaydiumClmmTickArrayBitmapExtensionAccountEvent {
+                metadata,
+                pubkey: account.pubkey,
+                executable: account.executable,
+                lamports: account.lamports,
+                owner: account.owner,
+                rent_epoch: account.rent_epoch,
+                tick_array_bitmap_extension: tick_array_bitmap_extension,
             },
         ))
     } else {
